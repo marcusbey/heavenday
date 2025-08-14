@@ -2,6 +2,8 @@ import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'util';
 import { config } from 'dotenv';
 import { cleanup } from '@testing-library/react';
+import 'resize-observer-polyfill/lib/ResizeObserver.global';
+import './mocks/server';
 
 // Load test environment variables
 config({ path: '.env.test' });

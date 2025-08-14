@@ -52,6 +52,8 @@
     "ts-jest": "^29.1.2",
     "@types/jest": "^29.5.12",
     "identity-obj-proxy": "^3.0.0",
-    "jest-mock-extended": "^3.0.6"
+    "jest-mock-extended": "^3.0.6",
+    "jest-axe": "^8.0.0",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }
