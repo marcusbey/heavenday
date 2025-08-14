@@ -1,0 +1,28 @@
+{
+  "name": "@heaven-dolls/automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Data sourcing and automation scripts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "scrape:amazon": "tsx src/scrapers/amazon.ts",
+    "trends:analyze": "tsx src/trends/analyzer.ts",
+    "sheets:update": "tsx src/sheets/updater.ts"
+  },
+  "dependencies": {
+    "@heaven-dolls/types": "*",
+    "@heaven-dolls/database": "*",
+    "puppeteer": "^22.6.2",
+    "googleapis": "^134.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.5"
+  }
+}

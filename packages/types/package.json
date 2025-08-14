@@ -1,0 +1,16 @@
+{
+  "name": "@heaven-dolls/types",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared TypeScript types for Heaven Dolls",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

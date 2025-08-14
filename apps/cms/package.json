@@ -1,0 +1,25 @@
+{
+  "name": "@heaven-dolls/cms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Content Management System for Heaven Dolls",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "dependencies": {
+    "@strapi/strapi": "^4.22.1",
+    "@strapi/plugin-users-permissions": "^4.22.1",
+    "@strapi/plugin-i18n": "^4.22.1",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=20.x.x",
+    "npm": ">=6.0.0"
+  }
+}

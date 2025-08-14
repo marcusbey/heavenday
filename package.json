@@ -1,0 +1,35 @@
+{
+  "name": "heaven-dolls",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Heaven Dolls - Automated marketplace for trending products",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,css,md}\"",
+    "test": "turbo test",
+    "test:e2e": "playwright test",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "clean": "turbo clean"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.12.4",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "turbo": "^1.12.4",
+    "typescript": "^5.4.3"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
+  "author": "",
+  "license": "MIT"
+}
