@@ -1,0 +1,241 @@
+name: Coverage Report
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  coverage:
+    name: Generate Coverage Report
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: heaven_dolls_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for better blame information
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run all tests with coverage
+        run: npm run test:coverage
+        env:
+          NODE_ENV: test
+          DATABASE_CLIENT: postgres
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+          DATABASE_NAME: heaven_dolls_test
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
+
+      - name: Merge coverage reports
+        run: |
+          mkdir -p coverage/merged
+          npx nyc merge coverage/ coverage/merged/coverage.json
+          npx nyc report --reporter=lcov --reporter=text-summary --temp-dir=coverage/merged --report-dir=coverage/merged
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./coverage
+          flags: unittests
+          name: heaven-dolls-coverage
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/merged/lcov.info
+
+      - name: Generate coverage badge
+        uses: tj-actions/coverage-badge-py@v2
+        with:
+          output: coverage-badge.svg
+
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Read coverage summary
+            const coverageSummaryPath = path.join(process.cwd(), 'coverage/coverage-summary.json');
+            
+            if (!fs.existsSync(coverageSummaryPath)) {
+              console.log('Coverage summary not found');
+              return;
+            }
+            
+            const coverageSummary = JSON.parse(fs.readFileSync(coverageSummaryPath, 'utf8'));
+            const total = coverageSummary.total;
+            
+            const formatCoverage = (metric) => {
+              const pct = metric.pct;
+              const emoji = pct >= 90 ? '🟢' : pct >= 80 ? '🟡' : '🔴';
+              return `${emoji} ${pct}%`;
+            };
+            
+            const commentBody = `## 📊 Coverage Report
+            
+            | Metric | Coverage | Threshold |
+            |--------|----------|-----------|
+            | Lines | ${formatCoverage(total.lines)} | 80% |
+            | Functions | ${formatCoverage(total.functions)} | 80% |
+            | Branches | ${formatCoverage(total.branches)} | 80% |
+            | Statements | ${formatCoverage(total.statements)} | 80% |
+            
+            ### Coverage by Package
+            `;
+            
+            // Add package-specific coverage if available
+            Object.keys(coverageSummary).forEach(key => {
+              if (key !== 'total' && key.includes('apps/')) {
+                const pkg = coverageSummary[key];
+                const pkgName = key.split('/').pop();
+                commentBody += `**${pkgName}**: Lines ${formatCoverage(pkg.lines)}, Functions ${formatCoverage(pkg.functions)}\n`;
+              }
+            });
+            
+            commentBody += `
+            <details>
+            <summary>📈 Coverage Details</summary>
+            
+            - **Total lines covered:** ${total.lines.covered}/${total.lines.total}
+            - **Total functions covered:** ${total.functions.covered}/${total.functions.total}
+            - **Total branches covered:** ${total.branches.covered}/${total.branches.total}
+            - **Total statements covered:** ${total.statements.covered}/${total.statements.total}
+            
+            </details>
+            `;
+            
+            // Find existing coverage comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const existingComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('Coverage Report')
+            );
+            
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-reports
+          path: |
+            coverage/
+            coverage-badge.svg
+          retention-days: 30
+
+      - name: Check coverage thresholds
+        run: |
+          node -e "
+            const fs = require('fs');
+            const summary = JSON.parse(fs.readFileSync('coverage/coverage-summary.json'));
+            const total = summary.total;
+            
+            const thresholds = {
+              lines: 80,
+              functions: 80,
+              branches: 80,
+              statements: 80
+            };
+            
+            let failed = false;
+            
+            Object.keys(thresholds).forEach(metric => {
+              const actual = total[metric].pct;
+              const threshold = thresholds[metric];
+              
+              if (actual < threshold) {
+                console.error(\`❌ \${metric} coverage \${actual}% is below threshold \${threshold}%\`);
+                failed = true;
+              } else {
+                console.log(\`✅ \${metric} coverage \${actual}% meets threshold \${threshold}%\`);
+              }
+            });
+            
+            if (failed) {
+              console.error('Coverage check failed!');
+              process.exit(1);
+            } else {
+              console.log('All coverage thresholds met!');
+            }
+          "
+
+  # Mutation testing (optional)
+  mutation-testing:
+    name: Mutation Testing
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Stryker mutation testing
+        run: |
+          # Install Stryker for critical components
+          npm install --save-dev @stryker-mutator/core @stryker-mutator/javascript-mutator @stryker-mutator/jest-runner
+          
+          # Run mutation testing on core modules
+          npx stryker run --configFile stryker.conf.json || true
+
+      - name: Upload mutation test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: mutation-test-results
+          path: reports/mutation/
