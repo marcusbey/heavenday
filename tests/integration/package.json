@@ -1,0 +1,48 @@
+{
+  "name": "@heaven-dolls/integration-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Integration tests for Heaven Dolls marketplace",
+  "scripts": {
+    "test": "jest --config jest.config.js",
+    "test:watch": "jest --config jest.config.js --watch",
+    "test:coverage": "jest --config jest.config.js --coverage",
+    "test:frontend-cms": "jest --config jest.config.js --testNamePattern='Frontend.*CMS'",
+    "test:automation-cms": "jest --config jest.config.js --testNamePattern='Automation.*CMS'",
+    "test:tracking": "jest --config jest.config.js --testNamePattern='Tracking'",
+    "test:database": "jest --config jest.config.js --testNamePattern='Database'",
+    "test:e2e-flows": "jest --config jest.config.js --testNamePattern='End-to-End'",
+    "test:performance": "jest --config jest.config.js --testNamePattern='Performance'",
+    "test:security": "jest --config jest.config.js --testNamePattern='Security'",
+    "test:error-handling": "jest --config jest.config.js --testNamePattern='Error Handling'",
+    "docker:up": "docker-compose -f ../../docker-compose.integration.yml up -d",
+    "docker:down": "docker-compose -f ../../docker-compose.integration.yml down -v",
+    "docker:logs": "docker-compose -f ../../docker-compose.integration.yml logs",
+    "setup": "npm run docker:up && sleep 30",
+    "cleanup": "npm run docker:down"
+  },
+  "dependencies": {
+    "@jest/globals": "^29.7.0",
+    "@prisma/client": "^5.12.1",
+    "@types/selenium-webdriver": "^4.1.21",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "googleapis": "^134.0.0",
+    "jest": "^29.7.0",
+    "selenium-webdriver": "^4.20.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
+    "jest-html-reporters": "^3.1.7",
+    "jest-junit": "^16.0.0",
+    "ts-node": "^10.9.2"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  }
+}

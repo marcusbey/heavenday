@@ -1,0 +1,30 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Expose port
+EXPOSE 3003
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:3003/health || exit 1
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S tracking -u 1001
+USER tracking
+
+# Start the application
+CMD ["npm", "run", "start"]

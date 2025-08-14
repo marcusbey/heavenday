@@ -1,0 +1,180 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for testing
+  postgres-integration:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: heaven_dolls_integration_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_integration_data:/var/lib/postgresql/data
+      - ./tests/fixtures/sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d heaven_dolls_integration_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and sessions
+  redis-integration:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # CMS (Strapi) for integration testing
+  cms-integration:
+    build:
+      context: ./apps/cms
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: test
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres-integration
+      DATABASE_PORT: 5432
+      DATABASE_NAME: heaven_dolls_integration_test
+      DATABASE_USERNAME: test_user
+      DATABASE_PASSWORD: test_password
+      REDIS_URL: redis://redis-integration:6379
+      JWT_SECRET: integration_test_jwt_secret
+      ADMIN_JWT_SECRET: integration_test_admin_jwt_secret
+      APP_KEYS: integration_test_app_key_1,integration_test_app_key_2
+      API_TOKEN_SALT: integration_test_api_token_salt
+      TRANSFER_TOKEN_SALT: integration_test_transfer_token_salt
+      AWS_ACCESS_KEY_ID: test_key
+      AWS_SECRET_ACCESS_KEY: test_secret
+      AWS_REGION: us-east-1
+      AWS_BUCKET_NAME: test-bucket
+    ports:
+      - "1338:1337"
+    depends_on:
+      postgres-integration:
+        condition: service_healthy
+      redis-integration:
+        condition: service_healthy
+    volumes:
+      - ./apps/cms:/app
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/_health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: ["npm", "run", "develop"]
+
+  # Frontend (Next.js) for integration testing
+  web-integration:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.integration
+    environment:
+      NODE_ENV: test
+      NEXT_PUBLIC_CMS_URL: http://cms-integration:1337
+      NEXT_PUBLIC_TRACKING_URL: http://tracking-integration:3003
+      DATABASE_URL: postgresql://test_user:test_password@postgres-integration:5432/heaven_dolls_integration_test
+    ports:
+      - "3001:3000"
+    depends_on:
+      cms-integration:
+        condition: service_healthy
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+
+  # Automation service for integration testing
+  automation-integration:
+    build:
+      context: ./apps/automation
+      dockerfile: Dockerfile.integration
+    environment:
+      NODE_ENV: test
+      CMS_URL: http://cms-integration:1337
+      TRACKING_URL: http://tracking-integration:3003
+      DATABASE_URL: postgresql://test_user:test_password@postgres-integration:5432/heaven_dolls_integration_test
+      REDIS_URL: redis://redis-integration:6379
+    depends_on:
+      cms-integration:
+        condition: service_healthy
+      redis-integration:
+        condition: service_healthy
+    volumes:
+      - ./apps/automation:/app
+      - /app/node_modules
+
+  # Tracking service for integration testing
+  tracking-integration:
+    build:
+      context: ./apps/tracking
+      dockerfile: Dockerfile.integration
+    environment:
+      NODE_ENV: test
+      PORT: 3003
+      DATABASE_URL: postgresql://test_user:test_password@postgres-integration:5432/heaven_dolls_integration_test
+      GOOGLE_SHEETS_CLIENT_EMAIL: test@example.com
+      GOOGLE_SHEETS_PRIVATE_KEY: test_private_key
+      GOOGLE_SHEETS_SPREADSHEET_ID: test_spreadsheet_id
+      REDIS_URL: redis://redis-integration:6379
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres-integration:
+        condition: service_healthy
+      redis-integration:
+        condition: service_healthy
+    volumes:
+      - ./apps/tracking:/app
+      - /app/node_modules
+
+  # MinIO for S3-compatible object storage testing
+  minio-integration:
+    image: minio/minio:latest
+    environment:
+      MINIO_ROOT_USER: integration-test
+      MINIO_ROOT_PASSWORD: integration-test-password
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_integration_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Nginx for load balancing and API gateway testing
+  nginx-integration:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./tests/integration/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web-integration
+      - cms-integration
+      - tracking-integration
+
+  # Mailhog for email testing
+  mailhog-integration:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+
+volumes:
+  postgres_integration_data:
+  minio_integration_data:
+
+networks:
+  default:
+    name: heaven-dolls-integration
