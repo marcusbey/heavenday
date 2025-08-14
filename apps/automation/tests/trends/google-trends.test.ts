@@ -1,11 +1,23 @@
 import { GoogleTrendsService } from '../../src/trends/google-trends';
 import { createMockTrendData } from '../setup';
+import { TrendKeyword, GeographicTrend, TrendData } from '../../src/types/trends';
+import { logger } from '../../src/utils/logger';
 
 // Mock the google-trends-api module
 jest.mock('google-trends-api', () => ({
   interestOverTime: jest.fn(),
   relatedQueries: jest.fn(),
   interestByRegion: jest.fn()
+}));
+
+// Mock logger
+jest.mock('../../src/utils/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn()
+  }
 }));
 
 import googleTrends from 'google-trends-api';
