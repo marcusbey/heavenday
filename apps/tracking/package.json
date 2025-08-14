@@ -1,0 +1,69 @@
+{
+  "name": "@heaven-dolls/tracking",
+  "version": "1.0.0",
+  "description": "Comprehensive tracking system with Google Sheets integration for Heaven Dolls marketplace",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "sheets:sync": "tsx src/sheets/sync.ts",
+    "sheets:setup": "tsx src/setup/initialize.ts",
+    "webhook:start": "tsx src/webhooks/server.ts"
+  },
+  "dependencies": {
+    "googleapis": "^134.0.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "dotenv": "^16.4.5",
+    "zod": "^3.22.4",
+    "winston": "^3.11.0",
+    "node-cron": "^3.0.3",
+    "axios": "^1.6.8",
+    "crypto": "^1.0.1",
+    "nodemailer": "^6.9.13",
+    "date-fns": "^3.6.0",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^6.4.14"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.3",
+    "tsx": "^4.7.1",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.12",
+    "ts-jest": "^29.1.2",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^7.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "prettier": "^3.2.5"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/src"],
+    "testMatch": ["**/__tests__/**/*.ts", "**/?(*.)+(spec|test).ts"],
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.d.ts",
+      "!src/**/__tests__/**"
+    ]
+  },
+  "keywords": [
+    "tracking",
+    "analytics",
+    "google-sheets",
+    "user-journey",
+    "order-lifecycle",
+    "business-intelligence"
+  ],
+  "author": "Heaven Dolls Team",
+  "license": "MIT"
+}
