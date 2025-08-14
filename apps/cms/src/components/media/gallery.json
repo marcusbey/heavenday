@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_media_galleries",
+  "info": {
+    "displayName": "Gallery",
+    "description": "Media gallery for products"
+  },
+  "options": {},
+  "attributes": {
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "videos": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["videos"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["product", "lifestyle", "detail", "comparison", "360"],
+      "default": "product"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

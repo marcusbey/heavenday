@@ -1,0 +1,128 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reviews",
+  "info": {
+    "singularName": "review",
+    "pluralName": "reviews",
+    "displayName": "Review",
+    "description": "Product reviews and ratings from customers"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "reviews"
+    },
+    "customerName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "customerEmail": {
+      "type": "email",
+      "required": true
+    },
+    "customerId": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "integer",
+      "required": true,
+      "min": 1,
+      "max": 5
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "comment": {
+      "type": "text",
+      "required": true,
+      "maxLength": 2000
+    },
+    "pros": {
+      "type": "text"
+    },
+    "cons": {
+      "type": "text"
+    },
+    "isVerifiedPurchase": {
+      "type": "boolean",
+      "default": false
+    },
+    "isRecommended": {
+      "type": "boolean"
+    },
+    "helpfulCount": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "notHelpfulCount": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "approved", "rejected", "spam"],
+      "default": "pending",
+      "required": true
+    },
+    "moderatorNotes": {
+      "type": "text"
+    },
+    "moderatedBy": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    },
+    "moderatedAt": {
+      "type": "datetime"
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "videos": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["videos"]
+    },
+    "reviewSource": {
+      "type": "enumeration",
+      "enum": ["website", "amazon", "google", "facebook", "imported"],
+      "default": "website"
+    },
+    "externalId": {
+      "type": "string"
+    },
+    "reviewDate": {
+      "type": "date"
+    },
+    "isHighlighted": {
+      "type": "boolean",
+      "default": false
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "mappedBy": "reviews"
+    },
+    "sentiment": {
+      "type": "enumeration",
+      "enum": ["positive", "neutral", "negative"]
+    },
+    "sentimentScore": {
+      "type": "float",
+      "min": -1,
+      "max": 1
+    }
+  }
+}

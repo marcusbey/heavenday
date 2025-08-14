@@ -7,16 +7,39 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "export": "strapi export",
+    "import": "strapi import",
+    "seed": "strapi console -e 'require(\"./scripts/seed\")()'",
+    "setup": "node scripts/setup.js",
+    "deploy": "npm run build && strapi deploy",
+    "console": "strapi console",
+    "ts:check": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix"
   },
   "dependencies": {
     "@strapi/strapi": "^4.22.1",
     "@strapi/plugin-users-permissions": "^4.22.1",
     "@strapi/plugin-i18n": "^4.22.1",
-    "pg": "^8.11.5"
+    "@strapi/plugin-graphql": "^4.22.1",
+    "@strapi/plugin-documentation": "^4.22.1",
+    "@strapi/plugin-upload": "^4.22.1",
+    "@strapi/provider-upload-aws-s3": "^4.22.1",
+    "@strapi/provider-email-nodemailer": "^4.22.1",
+    "pg": "^8.11.5",
+    "redis": "^4.6.13",
+    "sharp": "^0.33.3",
+    "slugify": "^1.6.6",
+    "uuid": "^9.0.1",
+    "axios": "^1.6.8",
+    "node-cron": "^3.0.3"
   },
   "devDependencies": {
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.7",
+    "@types/uuid": "^9.0.8",
+    "ts-node": "^10.9.2"
   },
   "engines": {
     "node": ">=18.0.0 <=20.x.x",

@@ -1,0 +1,119 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_variants",
+  "info": {
+    "singularName": "product-variant",
+    "pluralName": "product-variants",
+    "displayName": "Product Variant",
+    "description": "Product variants with different sizes, colors, materials, etc."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "variants"
+    },
+    "sku": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 100
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "originalPrice": {
+      "type": "decimal",
+      "min": 0
+    },
+    "stockQuantity": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "weight": {
+      "type": "float",
+      "min": 0
+    },
+    "dimensions": {
+      "type": "component",
+      "component": "product.dimensions"
+    },
+    "size": {
+      "type": "string"
+    },
+    "color": {
+      "type": "string"
+    },
+    "colorHex": {
+      "type": "string",
+      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+    },
+    "material": {
+      "type": "string"
+    },
+    "style": {
+      "type": "string"
+    },
+    "pattern": {
+      "type": "string"
+    },
+    "finish": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "component",
+      "component": "product.variant-attribute",
+      "repeatable": true
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "mainImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "isDefault": {
+      "type": "boolean",
+      "default": false
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "barcode": {
+      "type": "string"
+    },
+    "trackInventory": {
+      "type": "boolean",
+      "default": true
+    },
+    "allowBackorder": {
+      "type": "boolean",
+      "default": false
+    },
+    "lowStockThreshold": {
+      "type": "integer",
+      "min": 0,
+      "default": 5
+    }
+  }
+}

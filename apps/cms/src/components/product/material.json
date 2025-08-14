@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_product_materials",
+  "info": {
+    "displayName": "Material",
+    "description": "Product materials and composition"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "percentage": {
+      "type": "float",
+      "min": 0,
+      "max": 100
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["fabric", "metal", "plastic", "wood", "leather", "synthetic", "natural", "composite"],
+      "default": "synthetic"
+    },
+    "properties": {
+      "type": "string"
+    },
+    "origin": {
+      "type": "string"
+    },
+    "isSustainable": {
+      "type": "boolean",
+      "default": false
+    },
+    "certifications": {
+      "type": "string"
+    }
+  }
+}

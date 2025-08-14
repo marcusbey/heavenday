@@ -1,0 +1,56 @@
+{
+  "collectionName": "components_product_shipping_info",
+  "info": {
+    "displayName": "Shipping Info",
+    "description": "Product shipping and delivery information"
+  },
+  "options": {},
+  "attributes": {
+    "weight": {
+      "type": "float",
+      "min": 0
+    },
+    "weightUnit": {
+      "type": "enumeration",
+      "enum": ["g", "kg", "lb", "oz"],
+      "default": "kg"
+    },
+    "dimensions": {
+      "type": "component",
+      "component": "product.dimensions"
+    },
+    "shippingClass": {
+      "type": "string"
+    },
+    "freeShippingThreshold": {
+      "type": "decimal",
+      "min": 0
+    },
+    "estimatedDeliveryDays": {
+      "type": "integer",
+      "min": 1,
+      "max": 365
+    },
+    "shippingCost": {
+      "type": "decimal",
+      "min": 0
+    },
+    "isFragile": {
+      "type": "boolean",
+      "default": false
+    },
+    "requiresSpecialHandling": {
+      "type": "boolean",
+      "default": false
+    },
+    "restrictions": {
+      "type": "text"
+    },
+    "availableCountries": {
+      "type": "string"
+    },
+    "hazardousClassification": {
+      "type": "string"
+    }
+  }
+}

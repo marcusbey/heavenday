@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_product_dimensions",
+  "info": {
+    "displayName": "Dimensions",
+    "description": "Product dimensions"
+  },
+  "options": {},
+  "attributes": {
+    "length": {
+      "type": "float",
+      "min": 0
+    },
+    "width": {
+      "type": "float",
+      "min": 0
+    },
+    "height": {
+      "type": "float",
+      "min": 0
+    },
+    "unit": {
+      "type": "enumeration",
+      "enum": ["cm", "in", "mm", "m", "ft"],
+      "default": "cm"
+    }
+  }
+}

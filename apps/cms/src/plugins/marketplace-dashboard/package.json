@@ -1,0 +1,34 @@
+{
+  "name": "marketplace-dashboard",
+  "version": "0.0.0",
+  "description": "Heaven Dolls marketplace dashboard for Strapi CMS",
+  "strapi": {
+    "name": "marketplace-dashboard",
+    "description": "Custom dashboard for marketplace analytics and management",
+    "kind": "plugin",
+    "displayName": "Marketplace Dashboard"
+  },
+  "dependencies": {
+    "@strapi/helper-plugin": "^4.22.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^5.3.4",
+    "styled-components": "^5.3.11"
+  },
+  "peerDependencies": {
+    "@strapi/strapi": "^4.0.0"
+  },
+  "author": {
+    "name": "Heaven Dolls Team"
+  },
+  "maintainers": [
+    {
+      "name": "Heaven Dolls Team"
+    }
+  ],
+  "engines": {
+    "node": ">=18.0.0 <=20.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}

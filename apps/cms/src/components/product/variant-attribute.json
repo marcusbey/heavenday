@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_product_variant_attributes",
+  "info": {
+    "displayName": "Variant Attribute",
+    "description": "Custom attributes for product variants"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "value": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["text", "number", "boolean", "date", "color", "size"],
+      "default": "text"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "isVisible": {
+      "type": "boolean",
+      "default": true
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "collectionName": "components_analytics_trending_data",
+  "info": {
+    "displayName": "Trending Data",
+    "description": "Analytics and trending information for products"
+  },
+  "options": {},
+  "attributes": {
+    "trendingScore": {
+      "type": "float",
+      "min": 0,
+      "max": 100
+    },
+    "searchVolume": {
+      "type": "integer",
+      "min": 0
+    },
+    "socialMentions": {
+      "type": "integer",
+      "min": 0
+    },
+    "competitorPrice": {
+      "type": "decimal",
+      "min": 0
+    },
+    "demandScore": {
+      "type": "float",
+      "min": 0,
+      "max": 100
+    },
+    "seasonalityScore": {
+      "type": "float",
+      "min": 0,
+      "max": 100
+    },
+    "conversionRate": {
+      "type": "float",
+      "min": 0,
+      "max": 100
+    },
+    "clickThroughRate": {
+      "type": "float",
+      "min": 0,
+      "max": 100
+    },
+    "bounceRate": {
+      "type": "float",
+      "min": 0,
+      "max": 100
+    },
+    "avgTimeOnPage": {
+      "type": "integer",
+      "min": 0
+    },
+    "lastUpdated": {
+      "type": "datetime"
+    },
+    "dataSource": {
+      "type": "enumeration",
+      "enum": ["google_trends", "social_media", "internal_analytics", "competitor_analysis"],
+      "default": "internal_analytics"
+    },
+    "keywords": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    }
+  }
+}
