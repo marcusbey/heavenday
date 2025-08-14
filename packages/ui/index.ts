@@ -1,2 +1,7 @@
 export * from "./src/components/button"
+export * from "./src/components/card"
+export * from "./src/components/input"
+export * from "./src/components/badge"
+export * from "./src/components/skeleton"
+export * from "./src/components/separator"
 export * from "./src/lib/utils"
