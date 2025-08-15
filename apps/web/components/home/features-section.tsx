@@ -42,7 +42,7 @@ export function FeaturesSection() {
             Why Choose Heaven Dolls?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            We're committed to providing an exceptional experience with every aspect of your journey
+            We&apos;re committed to providing an exceptional experience with every aspect of your journey
           </p>
         </div>
 

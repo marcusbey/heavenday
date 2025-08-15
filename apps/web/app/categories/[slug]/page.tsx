@@ -193,7 +193,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             <ProductGrid
               products={products}
               isLoading={productsLoading}
-              columns={viewMode === 'grid' ? 3 : 1}
+              columns={viewMode === 'grid' ? 3 : 2}
               className={viewMode === 'list' ? 'grid-cols-1' : ''}
             />
 

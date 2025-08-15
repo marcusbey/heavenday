@@ -61,7 +61,7 @@ export default function SearchPage() {
           {query && (
             <div className="mb-4">
               <p className="text-muted-foreground">
-                Showing results for: <span className="font-medium text-foreground">"{query}"</span>
+                Showing results for: <span className="font-medium text-foreground">&ldquo;{query}&rdquo;</span>
               </p>
               {totalProducts > 0 && (
                 <p className="text-sm text-muted-foreground mt-1">
