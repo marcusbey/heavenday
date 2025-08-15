@@ -11,7 +11,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --coverage --maxWorkers=2"
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
+    "build:standalone": "next build && next export"
   },
   "dependencies": {
     "next": "^14.1.4",
@@ -29,9 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.3.0",
-    "lucide-react": "^0.376.0",
-    "@heaven-dolls/types": "workspace:*",
-    "@heaven-dolls/ui": "workspace:*"
+    "lucide-react": "^0.376.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

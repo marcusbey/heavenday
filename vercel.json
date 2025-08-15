@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "projects": [
+    {
+      "name": "heaven-dolls-web",
+      "source": "apps/web",
+      "framework": "nextjs",
+      "buildCommand": "cd apps/web && npm run build",
+      "outputDirectory": "apps/web/.next",
+      "installCommand": "npm install --legacy-peer-deps",
+      "nodeVersion": "18.x"
+    }
+  ],
+  "github": {
+    "silent": true
+  }
+}
