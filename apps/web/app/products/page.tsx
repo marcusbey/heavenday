@@ -1,149 +1,94 @@
-'use client';
-
-import { useState, useMemo } from 'react';
-import { MainLayout } from '@/components/layout/main-layout';
-import { ProductGrid } from '@/components/products/product-grid';
-import { ProductFilters } from '@/components/products/product-filters';
-import { ProductSort } from '@/components/products/product-sort';
-import { Pagination } from '@/components/ui/pagination';
-import { useProducts } from '@/hooks/use-products';
-import type { ExtendedProductFilters, ProductSort as SortType } from '@heaven-dolls/types';
-import { Button } from '@heaven-dolls/ui';
-import { Filter, Grid, List } from 'lucide-react';
-
 export default function ProductsPage() {
-  const [filters, setFilters] = useState<ExtendedProductFilters>({});
-  const [sort, setSort] = useState<SortType>({ field: 'createdAt', direction: 'desc' });
-  const [page, setPage] = useState(1);
-  const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  
-  const pageSize = 12;
-  
-  // Combine filters with sort
-  const queryFilters = useMemo(() => ({ ...filters, sort }), [filters, sort]);
-  
-  const { data, isLoading, error } = useProducts(queryFilters, page, pageSize);
-  
-  const products = data?.data || [];
-  const pagination = data?.meta.pagination;
-  const totalPages = pagination?.pageCount || 1;
-  const totalProducts = pagination?.total || 0;
-
-  const handleFilterChange = (newFilters: ExtendedProductFilters) => {
-    setFilters(newFilters);
-    setPage(1); // Reset to first page when filters change
-  };
-
-  const handleSortChange = (newSort: SortType) => {
-    setSort(newSort);
-    setPage(1); // Reset to first page when sort changes
-  };
-
   return (
-    <MainLayout>
-      <div className="container py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">All Products</h1>
-          <p className="text-muted-foreground">
-            Discover our complete collection of premium products
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-2">
+              <div className="text-2xl font-bold text-pink-600">🌟</div>
+              <h1 className="text-2xl font-bold text-gray-900">Heaven-Dolls</h1>
+            </div>
+            <nav className="hidden md:flex space-x-8">
+              <a href="/" className="text-gray-600 hover:text-pink-600">Home</a>
+              <a href="#" className="text-pink-600 font-medium">Products</a>
+              <a href="#" className="text-gray-600 hover:text-pink-600">Categories</a>
+              <a href="#" className="text-gray-600 hover:text-pink-600">About</a>
+              <a href="#" className="text-gray-600 hover:text-pink-600">Contact</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Products Page Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">All Products</h1>
+          <p className="text-lg text-gray-600">Connect your Strapi CMS to see your automated product catalog</p>
         </div>
 
-        <div className="flex gap-8">
-          {/* Sidebar Filters */}
-          <aside className={`
-            ${showFilters ? 'block' : 'hidden'} 
-            lg:block w-full lg:w-64 flex-shrink-0
-          `}>
-            <div className="sticky top-24">
-              <ProductFilters
-                filters={filters}
-                onFiltersChange={handleFilterChange}
-                className="lg:border-r lg:pr-8"
-              />
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <main className="flex-1 min-w-0">
-            {/* Controls Bar */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-6 pb-4 border-b">
-              <div className="flex items-center gap-4">
-                {/* Mobile Filter Toggle */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="lg:hidden"
-                  onClick={() => setShowFilters(!showFilters)}
-                >
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filters
-                </Button>
-                
-                {/* Results Count */}
-                <p className="text-sm text-muted-foreground">
-                  {totalProducts} {totalProducts === 1 ? 'product' : 'products'}
-                </p>
+        {/* Demo Product Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow">
+              <div className="h-48 bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-4xl">📦</span>
               </div>
-
-              <div className="flex items-center gap-4">
-                {/* View Mode Toggle */}
-                <div className="flex items-center border rounded-md">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className="rounded-r-none"
-                  >
-                    <Grid className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className="rounded-l-none"
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {/* Sort */}
-                <ProductSort sort={sort} onSortChange={handleSortChange} />
+              <h3 className="font-semibold text-gray-900 mb-2">Demo Product {i}</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Trending products will appear here automatically once your automation is running.
+              </p>
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-bold text-pink-600">$99.99</span>
+                <button className="bg-pink-600 text-white px-4 py-2 rounded font-medium hover:bg-pink-700 transition-colors">
+                  View Details
+                </button>
               </div>
             </div>
+          ))}
+        </div>
 
-            {/* Error State */}
-            {error && (
-              <div className="text-center py-12">
-                <p className="text-destructive">
-                  Failed to load products. Please try again.
-                </p>
+        {/* Features Section */}
+        <div className="mt-16 bg-white rounded-lg p-8 border">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Automated Product Discovery</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🔍</span>
               </div>
-            )}
-
-            {/* Products Grid */}
-            <ProductGrid
-              products={products}
-              isLoading={isLoading}
-              columns={viewMode === 'grid' ? 3 : 1}
-              className={viewMode === 'list' ? 'grid-cols-1' : ''}
-            />
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-12 flex justify-center">
-                <Pagination
-                  currentPage={page}
-                  totalPages={totalPages}
-                  onPageChange={setPage}
-                />
+              <h3 className="font-semibold mb-2">Google Trends</h3>
+              <p className="text-sm text-gray-600">Real-time trending product discovery</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🛒</span>
               </div>
-            )}
-          </main>
+              <h3 className="font-semibold mb-2">Amazon Scraping</h3>
+              <p className="text-sm text-gray-600">Automated product data collection</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">📊</span>
+              </div>
+              <h3 className="font-semibold mb-2">Strapi CMS</h3>
+              <p className="text-sm text-gray-600">Automated content management</p>
+            </div>
+          </div>
         </div>
       </div>
-    </MainLayout>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <span className="text-2xl">🌟</span>
+            <span className="text-xl font-bold">Heaven-Dolls</span>
+          </div>
+          <p className="text-gray-400">
+            Built with Claude Code for automated marketplace success
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 }

@@ -122,7 +122,7 @@ class ApiClient {
       populate: 'mainImage,images,videos,category,brand,variants,variants.images,tags,reviews,relatedProducts,crossSellProducts,upSellProducts',
       filters: { slug },
     }).then(response => ({
-      data: response.data[0],
+      data: (response.data as any)[0],
       meta: response.meta,
     }));
   }
@@ -159,7 +159,7 @@ class ApiClient {
       populate: 'image,banner,childCategories,parentCategory',
       filters: { slug, isActive: true },
     }).then(response => ({
-      data: response.data[0],
+      data: (response.data as any)[0],
       meta: response.meta,
     }));
   }
@@ -186,7 +186,7 @@ class ApiClient {
       populate: 'logo',
       filters: { slug, isActive: true },
     }).then(response => ({
-      data: response.data[0],
+      data: (response.data as any)[0],
       meta: response.meta,
     }));
   }

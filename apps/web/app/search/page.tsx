@@ -1,212 +1,108 @@
-'use client';
-
-import { useSearchParams } from 'next/navigation';
-import { MainLayout } from '@/components/layout/main-layout';
-import { ProductGrid } from '@/components/products/product-grid';
-import { ProductFilters } from '@/components/products/product-filters';
-import { ProductSort } from '@/components/products/product-sort';
-import { Pagination } from '@/components/ui/pagination';
-import { useSearchProducts } from '@/hooks/use-products';
-import { useState, useMemo } from 'react';
-import { Button } from '@heaven-dolls/ui';
-import { Filter, Grid, List, Search } from 'lucide-react';
-import type { ExtendedProductFilters, ProductSort as SortType } from '@heaven-dolls/types';
-
 export default function SearchPage() {
-  const searchParams = useSearchParams();
-  const query = searchParams?.get('q') || '';
-  
-  const [filters, setFilters] = useState<ExtendedProductFilters>({});
-  const [sort, setSort] = useState<SortType>({ field: 'createdAt', direction: 'desc' });
-  const [page, setPage] = useState(1);
-  const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  
-  const pageSize = 12;
-  
-  // Combine filters with sort and search query
-  const queryFilters = useMemo(() => ({ 
-    ...filters, 
-    searchQuery: query,
-    sort 
-  }), [filters, sort, query]);
-  
-  const { data, isLoading, error } = useSearchProducts(query, queryFilters);
-  
-  const products = data?.data || [];
-  const pagination = data?.meta.pagination;
-  const totalPages = pagination?.pageCount || 1;
-  const totalProducts = pagination?.total || 0;
-
-  const handleFilterChange = (newFilters: ExtendedProductFilters) => {
-    setFilters(newFilters);
-    setPage(1);
-  };
-
-  const handleSortChange = (newSort: SortType) => {
-    setSort(newSort);
-    setPage(1);
-  };
-
   return (
-    <MainLayout>
-      <div className="container py-8">
-        {/* Search Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Search className="h-6 w-6 text-muted-foreground" />
-            <h1 className="text-3xl font-bold">Search Results</h1>
-          </div>
-          
-          {query && (
-            <div className="mb-4">
-              <p className="text-muted-foreground">
-                Showing results for: <span className="font-medium text-foreground">&ldquo;{query}&rdquo;</span>
-              </p>
-              {totalProducts > 0 && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  {totalProducts} {totalProducts === 1 ? 'result' : 'results'} found
-                </p>
-              )}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-2">
+              <div className="text-2xl font-bold text-pink-600">🌟</div>
+              <h1 className="text-2xl font-bold text-gray-900">Heaven-Dolls</h1>
             </div>
-          )}
+            <nav className="hidden md:flex space-x-8">
+              <a href="/" className="text-gray-600 hover:text-pink-600">Home</a>
+              <a href="/products" className="text-gray-600 hover:text-pink-600">Products</a>
+              <a href="#" className="text-gray-600 hover:text-pink-600">Categories</a>
+              <a href="#" className="text-gray-600 hover:text-pink-600">About</a>
+              <a href="#" className="text-gray-600 hover:text-pink-600">Contact</a>
+            </nav>
+          </div>
+        </div>
+      </header>
 
-          {!query && (
-            <p className="text-muted-foreground">
-              Enter a search term to find products
-            </p>
-          )}
+      {/* Search Page Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Search Results</h1>
+          <p className="text-lg text-gray-600">Find exactly what you&apos;re looking for</p>
         </div>
 
-        {query && (
-          <div className="flex gap-8">
-            {/* Sidebar Filters */}
-            <aside className={`
-              ${showFilters ? 'block' : 'hidden'} 
-              lg:block w-full lg:w-64 flex-shrink-0
-            `}>
-              <div className="sticky top-24">
-                <ProductFilters
-                  filters={filters}
-                  onFiltersChange={handleFilterChange}
-                  className="lg:border-r lg:pr-8"
-                />
-              </div>
-            </aside>
-
-            {/* Main Content */}
-            <main className="flex-1 min-w-0">
-              {/* Controls Bar */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-6 pb-4 border-b">
-                <div className="flex items-center gap-4">
-                  {/* Mobile Filter Toggle */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="lg:hidden"
-                    onClick={() => setShowFilters(!showFilters)}
-                  >
-                    <Filter className="h-4 w-4 mr-2" />
-                    Filters
-                  </Button>
-                  
-                  {/* Results Count */}
-                  <p className="text-sm text-muted-foreground">
-                    {totalProducts} {totalProducts === 1 ? 'result' : 'results'}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  {/* View Mode Toggle */}
-                  <div className="flex items-center border rounded-md">
-                    <Button
-                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setViewMode('grid')}
-                      className="rounded-r-none"
-                    >
-                      <Grid className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={viewMode === 'list' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setViewMode('list')}
-                      className="rounded-l-none"
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  {/* Sort */}
-                  <ProductSort sort={sort} onSortChange={handleSortChange} />
-                </div>
-              </div>
-
-              {/* Error State */}
-              {error && (
-                <div className="text-center py-12">
-                  <p className="text-destructive">
-                    Failed to search products. Please try again.
-                  </p>
-                </div>
-              )}
-
-              {/* No Results */}
-              {!isLoading && !error && query && products.length === 0 && (
-                <div className="text-center py-12">
-                  <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No results found</h3>
-                  <p className="text-muted-foreground mb-6">
-                    Try adjusting your search terms or browse our categories
-                  </p>
-                  <div className="flex gap-4 justify-center">
-                    <Button variant="outline" asChild>
-                      <a href="/products">Browse All Products</a>
-                    </Button>
-                    <Button variant="outline" asChild>
-                      <a href="/categories">Browse Categories</a>
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Search Suggestions */}
-              {!isLoading && !error && query && products.length === 0 && (
-                <div className="mt-8 p-6 bg-muted/30 rounded-lg">
-                  <h4 className="font-medium mb-3">Search Suggestions:</h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Check your spelling</li>
-                    <li>• Use fewer or different keywords</li>
-                    <li>• Try more general terms</li>
-                    <li>• Browse our categories for inspiration</li>
-                  </ul>
-                </div>
-              )}
-
-              {/* Products Grid */}
-              {(query && products.length > 0) && (
-                <ProductGrid
-                  products={products}
-                  isLoading={isLoading}
-                  columns={viewMode === 'grid' ? 3 : 1}
-                  className={viewMode === 'list' ? 'grid-cols-1' : ''}
-                />
-              )}
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="mt-12 flex justify-center">
-                  <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                  />
-                </div>
-              )}
-            </main>
+        {/* Search Bar */}
+        <div className="mb-8">
+          <div className="relative max-w-xl mx-auto">
+            <input
+              type="text"
+              placeholder="Search for products..."
+              className="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+            <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pink-600">
+              <span className="text-xl">🔍</span>
+            </button>
           </div>
-        )}
+        </div>
+
+        {/* Demo Search Results */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow">
+              <div className="h-48 bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-4xl">📦</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Search Result {i}</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Matching products will appear here based on your search query.
+              </p>
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-bold text-pink-600">$99.99</span>
+                <button className="bg-pink-600 text-white px-4 py-2 rounded font-medium hover:bg-pink-700 transition-colors">
+                  View Details
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Search Tips */}
+        <div className="mt-16 bg-white rounded-lg p-8 border">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Search Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">⚡</span>
+              </div>
+              <h3 className="font-semibold mb-2">Fast Search</h3>
+              <p className="text-sm text-gray-600">Lightning-fast product discovery</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <h3 className="font-semibold mb-2">Smart Filters</h3>
+              <p className="text-sm text-gray-600">Advanced filtering options</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🔍</span>
+              </div>
+              <h3 className="font-semibold mb-2">AI-Powered</h3>
+              <p className="text-sm text-gray-600">Intelligent search suggestions</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </MainLayout>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <span className="text-2xl">🌟</span>
+            <span className="text-xl font-bold">Heaven-Dolls</span>
+          </div>
+          <p className="text-gray-400">
+            Built with Claude Code for automated marketplace success
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 }

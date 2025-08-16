@@ -64,7 +64,7 @@ export function generateProductMetadata(product: Product): Metadata {
     description: desc,
     keywords: seoKeywords || `${name}, adult products, premium quality`,
     alternates: {
-      canonical: canonicalUrl || url,
+      canonical: url,
     },
     openGraph: {
       type: 'article',
@@ -99,7 +99,6 @@ export function generateCategoryMetadata(category: Category): Metadata {
     seoTitle,
     seoDescription,
     seoKeywords,
-    canonicalUrl,
     image,
   } = category.attributes;
 
@@ -115,7 +114,7 @@ export function generateCategoryMetadata(category: Category): Metadata {
     description: desc,
     keywords: seoKeywords || `${name}, adult products, premium collection`,
     alternates: {
-      canonical: canonicalUrl || url,
+      canonical: url,
     },
     openGraph: {
       type: 'website',

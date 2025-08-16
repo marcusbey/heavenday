@@ -91,7 +91,7 @@ export function ProductCarousel({
       >
         {displayItems.map((product, index) => (
           <div
-            key={isLoading ? index : product.id}
+            key={isLoading ? index : (product as any).id}
             className="flex-none w-64 sm:w-72"
           >
             {isLoading ? (

@@ -10,7 +10,7 @@ const nextConfig = {
       },
     },
   },
-  transpilePackages: ['@heaven-dolls/ui', '@heaven-dolls/types'],
+  transpilePackages: [],
   trailingSlash: false,
   
   // Ensure homepage is always accessible

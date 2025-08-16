@@ -2,12 +2,12 @@
 
 import { MainLayout } from '@/components/layout/main-layout';
 import { ProductGrid } from '@/components/products/product-grid';
-import { Button } from '@heaven-dolls/ui';
+import { Button } from '@/ui-components/button';
 import { Heart, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 
 // Mock wishlist data - replace with actual wishlist state management
-const mockWishlistItems = [];
+const mockWishlistItems: any[] = [];
 
 export default function WishlistPage() {
   const wishlistItems = mockWishlistItems;
@@ -23,9 +23,9 @@ export default function WishlistPage() {
               Save items you love to view them later and never lose track of what you want.
             </p>
             <div className="space-y-3">
-              <Button asChild>
-                <Link href="/products">Start Shopping</Link>
-              </Button>
+              <Link href="/products">
+                <Button>Start Shopping</Button>
+              </Link>
               <div>
                 <Link 
                   href="/trending" 
@@ -54,9 +54,9 @@ export default function WishlistPage() {
           </div>
           
           <div className="flex gap-3">
-            <Button variant="outline" asChild>
-              <Link href="/products">Continue Shopping</Link>
-            </Button>
+            <Link href="/products">
+              <Button variant="outline">Continue Shopping</Button>
+            </Link>
             <Button>
               <ShoppingBag className="h-4 w-4 mr-2" />
               Add All to Cart
